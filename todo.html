@@ -1,0 +1,40 @@
+<!-- Tab links -->
+<html>
+
+<head>
+    <title>todo app</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./todo.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+
+    <div class="tabContainer">
+        <h1>
+            #todo app
+        </h1>
+        <div class="tab">
+            <button class="tablinks allTab" id="defaultOpen" onclick="openTab(event, 'All')">All</button>
+
+            <button class="tablinks activeTab" onclick="openTab(event, 'Active')">Active</button>
+
+            <button class="tablinks completedTab" onclick="openTab(event, 'Completed')">Completed</button>
+        </div>
+
+        <div class="textInput">
+            <input type="text" id="addTaskInput">
+            <button onclick="addTask()">Add</button>
+        </div>
+
+        <div id="tasksList"></div>
+    </div>
+
+    <script src="./todo.js"></script>
+
+
+</body>
+
+</html>
