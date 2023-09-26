@@ -24,13 +24,13 @@ const getTasksList = () => {
   }
 };
 
-const setTaskCompleteById = (id) => {
+const setTaskCompleteById = (id, value) => {
   const allTasks = getTasksList();
   for (let i = 0; i < allTasks.length; i++) {
     // console.log(allTasks[i]);
     if (allTasks[i].id === id) {
       // console.log(allTasks[i]);
-      allTasks[i].isCompleted = true;
+      allTasks[i].isCompleted = value;
       break;
     }
   }
@@ -60,7 +60,7 @@ const createCheckBoxElement = (id, isCompleted, content) => {
   taskEl.setAttribute("type", "checkbox");
   taskEl.id = id;
   taskEl.addEventListener("change", (e) => {
-    setTaskCompleteById(parseInt(e.currentTarget.id, 10));
+    setTaskCompleteById(parseInt(e.currentTarget.id, 10), e.target.checked);
   });
   const taskLabel = document.createElement("label");
   taskLabel.innerHTML = content;
