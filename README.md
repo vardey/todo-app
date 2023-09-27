@@ -6,8 +6,5 @@ As the project loads it reads existing tasks from ``` allTasks ``` local storage
 ```
 allTasks: [{content: string, id: Date.now(), isCompleted: boolean}]
 ```
-``` initTasksList ``` function gets called on the initialisation. It appends a checkbox, label and span (delete button) with the data present in  ``` allTasks ```
 
-``` addTask ``` function takes the input value, adds it to the ``` allTasks ```, clears the rendered list and calls ``` initTasksList ``` to render the list with the latest data.
-
-The app can be tested at  [localhost](http://127.0.0.1:5500/todo.html)
+The app can be tested at  [visit app](http://127.0.0.1:5500/todo.html)
