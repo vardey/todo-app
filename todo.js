@@ -1,16 +1,8 @@
-// const allTasks = localStorage.getItem("allTasks");
-
 /*
-allTasksObj = [{content: string, id: date.now(), isCompleted: boolean}]
+localStorage = {
+    allTasksObj = JSON.stringify([{content: string, id: date.now(), isCompleted: boolean}])
+}
 */
-const clearTasksList = (id) => {
-  if (id === "tasksList") {
-    const tasksList = document.getElementById(id);
-    tasksList.innerHTML = "";
-  } else {
-    document.getElementById("parent" + id).remove();
-  }
-};
 
 const getTasksList = () => {
   const allTasks = localStorage.getItem("allTasks");
@@ -24,7 +16,7 @@ const getTasksList = () => {
   }
 };
 
-const setTaskCompleteById = (id, value) => {
+const setTaskCompleteById = (id, value, currentTab) => {
   const allTasks = getTasksList();
   for (let i = 0; i < allTasks.length; i++) {
     // console.log(allTasks[i]);
@@ -35,13 +27,18 @@ const setTaskCompleteById = (id, value) => {
     }
   }
   localStorage.setItem("allTasks", JSON.stringify(allTasks));
-  //   console.log({ allTasks, id });
-  clearTasksList("tasksList");
-  initTasksList();
+  createTasksList(currentTab);
+};
+
+const clearTasksList = (id) => {
+  const allTasks = getTasksList();
+  const newTasksList = allTasks.filter((task) => task.id !== id);
+  localStorage.setItem("allTasks", JSON.stringify(newTasksList));
+  document.getElementById("parent" + id).remove();
 };
 
 const createDeleteBtn = (id) => {
-  const deleteBtn = document.createElement("span");
+  const deleteBtn = document.createElement("i");
   deleteBtn.innerHTML = "delete";
   deleteBtn.addEventListener("click", () => {
     clearTasksList(id);
@@ -49,18 +46,25 @@ const createDeleteBtn = (id) => {
   deleteBtn.classList.add("deleteBtn");
   // material-symbols-outlined
   deleteBtn.classList.add("material-symbols-outlined");
+
+  deleteBtn.style.display = "flex";
   return deleteBtn;
 };
 
-const createCheckBoxElement = (id, isCompleted, content) => {
+const createCheckBoxElement = (id, isCompleted, content, currentTab) => {
   const parentDivEl = document.createElement("div");
   parentDivEl.id = "parent" + id;
   const taskEl = document.createElement("input");
+  parentDivEl.style.display = "flex";
 
   taskEl.setAttribute("type", "checkbox");
   taskEl.id = id;
   taskEl.addEventListener("change", (e) => {
-    setTaskCompleteById(parseInt(e.currentTarget.id, 10), e.target.checked);
+    setTaskCompleteById(
+      parseInt(e.currentTarget.id, 10),
+      e.target.checked,
+      currentTab
+    );
   });
   const taskLabel = document.createElement("label");
   taskLabel.innerHTML = content;
@@ -75,104 +79,42 @@ const createCheckBoxElement = (id, isCompleted, content) => {
   }
   taskLabel.htmlFor = id;
 
-//   taskLabel.appendChild(taskEl);
+  //   taskLabel.appendChild(taskEl);
   parentDivEl.appendChild(taskEl);
   parentDivEl.appendChild(taskLabel);
 
-  if (isCompleted) {
+  console.log(localStorage.getItem("currentTab"));
+  if (currentTab === "Completed") {
     parentDivEl.appendChild(createDeleteBtn(id));
   }
   return parentDivEl;
 };
 
-const initTasksList = () => {
-  const allTasksList = getTasksList();
-  //   console.log(allTasksList);
-  const allTasksListEl = document.getElementById("tasksList");
+const createTasksList = (currentTab) => {
+  const tasksList = getTasksList().filter((task) => {
+    if (currentTab === "Completed" && task.isCompleted) {
+      return task;
+    } else if (currentTab === "Active" && !task.isCompleted) {
+      return task;
+    } else if (currentTab === "All") {
+      return task;
+    }
+  });
+  console.log({tasksList, currentTab});
+  //clear html element
+  const tasksListsEl = document.getElementById("tasksList");
+  tasksListsEl.innerHTML = "";
 
-  allTasksList.forEach((task) => {
+  tasksList.forEach((task) => {
     const allTasksElement = createCheckBoxElement(
       task.id,
       task.isCompleted,
-      task.content
+      task.content,
+      currentTab
     );
-    allTasksListEl.appendChild(allTasksElement);
+    tasksListsEl.appendChild(allTasksElement);
   });
 };
 
-function openTab(evt, tabName) {
-  switch (tabName) {
-    case "Completed":
-      for (let element of document.getElementsByClassName(
-        "listType_completed"
-      )) {
-        element.style.display = "flex";
-      }
-      for (let element of document.getElementsByClassName("deleteBtn")) {
-        element.style.display = "flex";
-      }
-      for (let element of document.getElementsByClassName("listType_active")) {
-        element.style.display = "none";
-      }
-
-      break;
-    case "Active":
-      for (let element of document.getElementsByClassName("listType_active")) {
-        element.style.display = "flex";
-      }
-      for (let element of document.getElementsByClassName(
-        "listType_completed"
-      )) {
-        element.style.display = "none";
-      }
-
-      break;
-    case "All":
-      // all
-      for (let element of document.getElementsByClassName(
-        "listType_completed"
-      )) {
-        element.style.display = "flex";
-      }
-      for (let element of document.getElementsByClassName("listType_active")) {
-        element.style.display = "flex";
-      }
-      for (let element of document.getElementsByClassName("deleteBtn")) {
-        element.style.display = "none";
-      }
-
-      break;
-    default:
-      //do nothing
-      break;
-  }
-}
-
-const addTask = () => {
-  console.log("add task called");
-  const addTaskInputEl = document.getElementById("addTaskInput");
-  const value = addTaskInputEl.value;
-  if (!value || !value.length) {
-    alert("Please enter a task.");
-    return;
-  }
-  const id = Date.now();
-  const task = { content: value, id, isCompleted: false };
-
-  let allTasks = localStorage.getItem("allTasks");
-  try {
-    allTasks = JSON.parse(allTasks) || [];
-  } catch (e) {
-    allTasks = [];
-  }
-  allTasks.push(task);
-  localStorage.setItem("allTasks", JSON.stringify(allTasks));
-  console.log({ allTasks, value });
-  clearTasksList("tasksList");
-  initTasksList();
-  addTaskInputEl.value = "";
-};
-
-initTasksList();
-// open all tab by default
+// createTasksList("All");
 document.getElementById("defaultOpen").click();

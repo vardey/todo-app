@@ -17,11 +17,11 @@
             #todo app
         </h1>
         <div class="tab">
-            <button class="tablinks allTab" id="defaultOpen" onclick="openTab(event, 'All')">All</button>
+            <button class="tablinks allTab" id="defaultOpen" onclick="createTasksList('All')">All</button>
 
-            <button class="tablinks activeTab" onclick="openTab(event, 'Active')">Active</button>
+            <button class="tablinks activeTab" onclick="createTasksList('Active')">Active</button>
 
-            <button class="tablinks completedTab" onclick="openTab(event, 'Completed')">Completed</button>
+            <button class="tablinks completedTab" onclick="createTasksList('Completed')">Completed</button>
         </div>
 
         <div class="textInput">
