@@ -4,6 +4,7 @@ localStorage = {
 }
 */
 
+
 const getTasksList = () => {
   const allTasks = localStorage.getItem("allTasks");
   let allTasksList = [];
@@ -115,6 +116,28 @@ const createTasksList = (currentTab) => {
     tasksListsEl.appendChild(allTasksElement);
   });
 };
+
+
+const addTask = () => {
+  console.log("add task called");
+  const addTaskInputEl = document.getElementById("addTaskInput");
+  const value = addTaskInputEl.value;
+  if (!value || !value.length) {
+    alert("Please enter a task.");
+    return;
+  }
+  const id = Date.now();
+  const task = { content: value, id, isCompleted: false };
+
+  const allTasks = getTasksList();
+ 
+  allTasks.push(task);
+  localStorage.setItem("allTasks", JSON.stringify(allTasks));
+  console.log({ allTasks, value });
+  createTasksList("All"); //switch to all tab
+  addTaskInputEl.value = "";
+};
+
 
 // createTasksList("All");
 document.getElementById("defaultOpen").click();
