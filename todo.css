@@ -15,8 +15,8 @@ body {
 
 .tab {
     overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    border-bottom: 1px solid #BDBDBD;;
+    /* background-color: #f1f1f1; */
     justify-content: center;
     display: flex;
     /* width: 800px; */
@@ -52,17 +52,41 @@ body {
     flex-grow: 1;
     border-radius: 4px;
     background-color: #2F80ED;
-    color: #ccc;
+    color: #FFFFFF;
 }
 
-#tasksList label{
-   flex: 1;
+#tasksList label {
+    flex: 1;
 }
 
-#tasksList span{
+#tasksList span {
     cursor: pointer;
- }
+}
 
 h1 {
     text-align: center;
+    color: #333;
+    letter-spacing: -1.62px;
+}
+
+.hideTextInput {
+    display: none;
+}
+
+.deleteAllBtn {
+    background-color: #EB5757;
+    color: #FFFFFF;
+    border-radius: 4px;
+    width: 124px;
+    height: 40px;
+}
+
+.deleteAllDiv {
+    display: flex;
+    justify-content: right;
+    padding-top: 10px;
+}
+
+.hideDeleteAllDiv {
+    display: none;
 }

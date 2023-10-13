@@ -4,6 +4,34 @@ localStorage = {
 }
 */
 
+const makeTabActive = (tabName) => {
+  switch (tabName) {
+    case "All":
+      document.getElementsByClassName("allTab")[0].style.borderBottom = "4px solid #2F80ED";
+      document.getElementsByClassName("activeTab")[0].style.borderBottom = "none";
+      document.getElementsByClassName("completedTab")[0].style.borderBottom = "none";
+      break;
+    case "Active":
+      document.getElementsByClassName("activeTab")[0].style.borderBottom = "4px solid #2F80ED";
+      document.getElementsByClassName("allTab")[0].style.borderBottom = "none";
+      document.getElementsByClassName("completedTab")[0].style.borderBottom = "none";
+      break;
+    case "Completed":
+      document.getElementsByClassName("completedTab")[0].style.borderBottom = "4px solid #2F80ED";
+      document.getElementsByClassName("allTab")[0].style.borderBottom = "none";
+      document.getElementsByClassName("activeTab")[0].style.borderBottom = "none";
+      break;
+    default:
+      break;
+  }
+}
+
+const deleteAll = () => {
+  const newList = getTasksList().filter((task) => !task.isCompleted);
+  localStorage.setItem("allTasks", JSON.stringify(newList));
+
+  createTasksList("All");
+};
 
 const getTasksList = () => {
   const allTasks = localStorage.getItem("allTasks");
@@ -101,7 +129,33 @@ const createTasksList = (currentTab) => {
       return task;
     }
   });
-  console.log({tasksList, currentTab});
+
+  if (currentTab === "Completed") {
+    const el = document.getElementsByClassName("textInput");
+    if (el && el.length) {
+      el[0].classList.replace("textInput", "hideTextInput");
+    }
+    if (tasksList && tasksList.length) {
+      const hideDeleteAllDiv =
+        document.getElementsByClassName("hideDeleteAllDiv");
+      if (hideDeleteAllDiv && hideDeleteAllDiv.length) {
+        hideDeleteAllDiv[0].classList.replace(
+          "hideDeleteAllDiv",
+          "deleteAllDiv"
+        );
+      }
+    }
+  } else {
+    const el = document.getElementsByClassName("hideTextInput");
+    if (el && el.length) {
+      el[0].classList.replace("hideTextInput", "textInput");
+    }
+    const deleteAllDiv = document.getElementsByClassName("deleteAllDiv");
+    if (deleteAllDiv && deleteAllDiv.length) {
+      deleteAllDiv[0].classList.replace("deleteAllDiv", "hideDeleteAllDiv");
+    }
+  }
+  console.log({ tasksList, currentTab });
   //clear html element
   const tasksListsEl = document.getElementById("tasksList");
   tasksListsEl.innerHTML = "";
@@ -115,8 +169,8 @@ const createTasksList = (currentTab) => {
     );
     tasksListsEl.appendChild(allTasksElement);
   });
+  makeTabActive(currentTab);
 };
-
 
 const addTask = () => {
   console.log("add task called");
@@ -130,14 +184,13 @@ const addTask = () => {
   const task = { content: value, id, isCompleted: false };
 
   const allTasks = getTasksList();
- 
+
   allTasks.push(task);
   localStorage.setItem("allTasks", JSON.stringify(allTasks));
   console.log({ allTasks, value });
   createTasksList("All"); //switch to all tab
   addTaskInputEl.value = "";
 };
-
 
 // createTasksList("All");
 document.getElementById("defaultOpen").click();
